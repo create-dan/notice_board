@@ -25,8 +25,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Notice Board App',
-      theme: ThemeData(primarySwatch: Colors.orange),
-      home: LandingScreen(),
+      theme: ThemeData(primarySwatch: Colors.purple),
+      home: GetTeachers(),
     );
   }
 }

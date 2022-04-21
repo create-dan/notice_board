@@ -47,6 +47,7 @@ dependencies:
   cloud_firestore:
   flutter_launcher_icons:
   lottie: any
+  modal_progress_hud_nsn: ^0.1.0-nullsafety-1
 
 dev_dependencies:
   flutter_test:

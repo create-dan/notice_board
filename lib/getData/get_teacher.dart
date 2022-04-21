@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:notice_board/helpers/constants.dart';
 import 'package:notice_board/models/teachers_model.dart';
+import 'package:notice_board/screens/auth_screens/landing_screen.dart';
 import 'package:notice_board/screens/auth_screens/student_login_screen.dart';
 
 class GetTeachers extends StatefulWidget {
@@ -17,11 +18,11 @@ class _GetTeachersState extends State<GetTeachers> {
   @override
   Widget build(BuildContext context) {
     CollectionReference adminCollection =
-        FirebaseFirestore.instance.collection('admins');
+        FirebaseFirestore.instance.collection('adminList');
 
     return Scaffold(
       body: FutureBuilder<DocumentSnapshot>(
-        future: adminCollection.doc("3MTDRFXnT7r5e4FC8u4v").get(),
+        future: adminCollection.doc("tUplnNX9yHCKkMVkkh8Q").get(),
         builder:
             (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
           if (snapshot.hasError) {
@@ -30,7 +31,7 @@ class _GetTeachersState extends State<GetTeachers> {
             );
           }
           if (snapshot.hasData && !snapshot.data!.exists) {
-            print(snapshot.data!.get("emails"));
+            debugPrint(snapshot.data!.get("emails"));
             return Container();
           }
           if (snapshot.connectionState == ConnectionState.done) {
@@ -40,7 +41,7 @@ class _GetTeachersState extends State<GetTeachers> {
             print(data['emails']);
 
             TeachersModel.teachersEmail = data['emails'];
-            return StudentLoginScreen();
+            return LandingScreen();
           }
           return Center(
             child: CircularProgressIndicator(color: kVioletShade),
