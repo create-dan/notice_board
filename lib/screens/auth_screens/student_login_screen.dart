@@ -7,12 +7,13 @@ import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:notice_board/helpers/constants.dart';
 import 'package:notice_board/helpers/validators.dart';
 import 'package:notice_board/models/teachers_model.dart';
-import 'package:notice_board/screens/auth_screens/auth_text_field.dart';
+import 'package:notice_board/models/user_model.dart';
+import 'package:notice_board/widgets/auth_text_field.dart';
 import 'package:notice_board/screens/auth_screens/student_signup_screen.dart';
 import 'package:notice_board/screens/home_page.dart';
 import 'package:notice_board/services/auth_helper.dart';
 import 'package:notice_board/services/get_user_data.dart';
-import 'auth_button.dart';
+import '../../widgets/auth_button.dart';
 
 class StudentLoginScreen extends StatefulWidget {
   const StudentLoginScreen({Key? key}) : super(key: key);
@@ -96,6 +97,9 @@ class _StudentLoginScreenState extends State<StudentLoginScreen> {
                                   password: passwordController.text)
                               .then((result) {
                             if (result == null) {
+                              setState(() {
+                                UserModel.isAdmin = false;
+                              });
                               Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(

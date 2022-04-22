@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:notice_board/helpers/constants.dart';
+import 'package:notice_board/screens/home_page.dart';
 import 'package:provider/provider.dart';
 
 import '../models/user_model.dart';
@@ -14,13 +15,16 @@ class GetUserData extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isAdmin = UserModel.isAdmin;
+
     FirebaseAuth auth = FirebaseAuth.instance;
     String uid = auth.currentUser!.uid.toString();
     String documentId = uid;
-    print(auth.currentUser?.email);
     print('GetUserData');
+    print("isAdmin $isAdmin");
+    print("Uid $documentId");
 
-    String collectionName = UserModel.isAdmin ? "admins" : "students";
+    String collectionName = isAdmin ? "admins" : "students";
 
     CollectionReference users =
         FirebaseFirestore.instance.collection(collectionName);
@@ -36,6 +40,7 @@ class GetUserData extends StatelessWidget {
             );
           }
           if (snapshot.hasData && !snapshot.data!.exists) {
+            print("Not Ok");
             return Center(
               child: CircularProgressIndicator(color: kVioletShade),
             );
@@ -55,11 +60,14 @@ class GetUserData extends StatelessWidget {
             UserModel.uid = data['Info']['uid'].toString();
 
             if (!auth.currentUser!.emailVerified) {
+              print("Email not verified");
               return VerifyUserScreen();
             }
+            return HomePage();
           }
           return Center(
-            child: CircularProgressIndicator(color: kGreenShadeColor),
+            child: CircularProgressIndicator(
+                color: isAdmin ? kOrangeShade : kVioletShade),
           );
         },
       ),

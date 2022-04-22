@@ -8,13 +8,14 @@ import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:notice_board/helpers/constants.dart';
 import 'package:notice_board/helpers/validators.dart';
 import 'package:notice_board/models/teachers_model.dart';
-import 'package:notice_board/screens/auth_screens/auth_text_field.dart';
+import 'package:notice_board/models/user_model.dart';
+import 'package:notice_board/widgets/auth_text_field.dart';
 import 'package:notice_board/screens/auth_screens/student_login_screen.dart';
 import 'package:notice_board/screens/home_page.dart';
 import 'package:notice_board/services/get_user_data.dart';
 import '../../services/auth_helper.dart';
 import '../../services/my_user_info.dart';
-import 'auth_button.dart';
+import '../../widgets/auth_button.dart';
 
 class StudentSignupScreen extends StatefulWidget {
   const StudentSignupScreen({Key? key}) : super(key: key);
@@ -44,6 +45,7 @@ class _StudentSignupScreenState extends State<StudentSignupScreen> {
     return Scaffold(
       body: ModalProgressHUD(
         inAsyncCall: showSpinner,
+        progressIndicator: CircularProgressIndicator(color: kVioletShade),
         child: Center(
           child: Form(
             key: _formFieldKey,
@@ -116,6 +118,9 @@ class _StudentSignupScreenState extends State<StudentSignupScreen> {
                           )
                               .then((result) async {
                             if (result == null) {
+                              setState(() {
+                                UserModel.isAdmin = false;
+                              });
                               await MyUserInfo().storeUserDetails(
                                 name: nameController.text,
                                 prn: prnController.text,

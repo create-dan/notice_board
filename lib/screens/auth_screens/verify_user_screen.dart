@@ -1,12 +1,13 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'dart:async';
+import 'dart:io';
+import 'package:android_intent_plus/android_intent.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:notice_board/helpers/constants.dart';
+import 'package:notice_board/models/user_model.dart';
 import 'package:notice_board/screens/home_page.dart';
-import 'package:provider/provider.dart';
-
 import '../../services/auth_helper.dart';
 
 class VerifyUserScreen extends StatefulWidget {
@@ -17,6 +18,7 @@ class VerifyUserScreen extends StatefulWidget {
 }
 
 class _VerifyUserScreenState extends State<VerifyUserScreen> {
+  bool isAdmin = UserModel.isAdmin;
   bool isEmailVerified = false;
   bool canResendEmail = false;
   Timer? timer;
@@ -53,7 +55,7 @@ class _VerifyUserScreenState extends State<VerifyUserScreen> {
     if (isEmailVerified) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          backgroundColor: kVioletShade,
+          backgroundColor: isAdmin ? kOrangeShade : kVioletShade,
           content: Text(
             'Email verified Successfully',
             style: TextStyle(color: Colors.white),
@@ -75,7 +77,7 @@ class _VerifyUserScreenState extends State<VerifyUserScreen> {
                 'Verify Email',
                 style: TextStyle(fontSize: 22),
               ),
-              backgroundColor: kVioletShade,
+              backgroundColor: isAdmin ? Colors.orangeAccent : kVioletShade,
               automaticallyImplyLeading: false,
             ),
             body: Center(
@@ -99,7 +101,7 @@ class _VerifyUserScreenState extends State<VerifyUserScreen> {
                       width: MediaQuery.of(context).size.width * 0.4,
                       height: 40,
                       decoration: BoxDecoration(
-                        color: kGreenShadeColor,
+                        color: isAdmin ? kOrangeShade : kVioletShade,
                         borderRadius: BorderRadius.circular(5),
                       ),
                       child: Row(
@@ -125,21 +127,22 @@ class _VerifyUserScreenState extends State<VerifyUserScreen> {
                   SizedBox(height: 20),
                   InkWell(
                     onTap: () async {
-                      await AuthHelper().signOut(context);
+                      await AuthHelper().signOut(context: context);
                     },
                     child: Container(
                       alignment: Alignment.center,
                       width: MediaQuery.of(context).size.width * 0.4,
                       height: 40,
                       decoration: BoxDecoration(
-                        border: Border.all(color: kGreenShadeColor),
+                        border: Border.all(
+                            color: isAdmin ? kOrangeShade : kVioletShade),
                         borderRadius: BorderRadius.circular(5),
                       ),
                       child: Text(
                         'Cancel',
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          color: kGreenShadeColor,
+                          color: isAdmin ? kOrangeShade : kVioletShade,
                           fontSize: 17,
                           fontWeight: FontWeight.w500,
                         ),

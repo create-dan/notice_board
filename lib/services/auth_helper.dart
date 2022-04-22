@@ -4,9 +4,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:notice_board/helpers/constants.dart';
 import 'package:notice_board/models/teachers_model.dart';
+import 'package:notice_board/models/user_model.dart';
 import 'package:notice_board/screens/auth_screens/student_login_screen.dart';
 
 class AuthHelper {
+  bool isAdmin = UserModel.isAdmin;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   get user => _auth.currentUser;
@@ -18,7 +20,7 @@ class AuthHelper {
       bool isAdmin = false}) async {
     if (isAdmin) {
       bool isValid = TeachersModel.teachersEmail.contains(email);
-      debugPrint("isValid $isValid");
+      print("isValid $isValid");
       if (!isValid) {
         return "You don't have the admin access.";
       }
@@ -29,7 +31,7 @@ class AuthHelper {
         email: email,
         password: password,
       );
-      debugPrint('Register successfully');
+      print('Register successfully');
 
       return null;
     } on FirebaseAuthException catch (e) {
@@ -53,7 +55,7 @@ class AuthHelper {
 
     try {
       await _auth.signInWithEmailAndPassword(email: email, password: password);
-      debugPrint('Login successfully');
+      print('Login successfully');
 
       return null;
     } on FirebaseAuthException catch (e) {
@@ -62,7 +64,7 @@ class AuthHelper {
   }
 
   //SignOut Method
-  Future signOut(context) async {
+  Future signOut({required BuildContext context, bool isAdmin = false}) async {
     await _auth.signOut();
     debugPrint('signout');
     Navigator.pushAndRemoveUntil(
@@ -70,6 +72,15 @@ class AuthHelper {
         MaterialPageRoute(
             builder: (BuildContext context) => StudentLoginScreen()),
         (route) => false);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: kVioletShade,
+        content: Text(
+          'Logout Successfully',
+          style: TextStyle(color: Colors.white),
+        ),
+      ),
+    );
   }
 
   Future verifyEmail({required context}) async {
@@ -79,7 +90,7 @@ class AuthHelper {
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          backgroundColor: kVioletShade,
+          backgroundColor: isAdmin ? kOrangeShade : kVioletShade,
           content: Text(
             'Verification email has been sent',
             style: TextStyle(color: Colors.white),

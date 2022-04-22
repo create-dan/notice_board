@@ -1,13 +1,9 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:notice_board/getData/get_teacher.dart';
-import 'package:notice_board/helpers/constants.dart';
-import 'package:notice_board/screens/auth_screens/landing_screen.dart';
-import 'package:notice_board/screens/auth_screens/student_login_screen.dart';
-import 'package:notice_board/screens/auth_screens/student_signup_screen.dart';
 
 User? user = FirebaseAuth.instance.currentUser;
 

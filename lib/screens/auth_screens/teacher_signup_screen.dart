@@ -8,14 +8,14 @@ import 'package:notice_board/helpers/constants.dart';
 import 'package:notice_board/helpers/validators.dart';
 import 'package:notice_board/models/teachers_model.dart';
 import 'package:notice_board/models/user_model.dart';
-import 'package:notice_board/screens/auth_screens/auth_text_field.dart';
+import 'package:notice_board/widgets/auth_text_field.dart';
 import 'package:notice_board/screens/auth_screens/student_login_screen.dart';
 import 'package:notice_board/screens/auth_screens/teacher_login_screen.dart';
 import 'package:notice_board/screens/home_page.dart';
 import 'package:notice_board/services/get_user_data.dart';
 import '../../services/auth_helper.dart';
 import '../../services/my_user_info.dart';
-import 'auth_button.dart';
+import '../../widgets/auth_button.dart';
 
 class TeacherSignupScreen extends StatefulWidget {
   const TeacherSignupScreen({Key? key}) : super(key: key);
@@ -41,6 +41,7 @@ class _TeacherSignupScreenState extends State<TeacherSignupScreen> {
     return Scaffold(
       body: ModalProgressHUD(
         inAsyncCall: showSpinner,
+        progressIndicator: CircularProgressIndicator(color: kOrangeShade),
         child: Center(
           child: Form(
             key: _formFieldKey,
@@ -112,13 +113,15 @@ class _TeacherSignupScreenState extends State<TeacherSignupScreen> {
                           )
                               .then((result) async {
                             if (result == null) {
+                              setState(() {
+                                UserModel.isAdmin = true;
+                              });
                               await MyUserInfo().storeUserDetails(
                                 name: nameController.text,
                                 email: emailController.text,
                                 password: passwordController.text,
                                 isAdmin: true,
                               );
-                              UserModel.isAdmin = true;
 
                               Navigator.pushReplacement(
                                 context,

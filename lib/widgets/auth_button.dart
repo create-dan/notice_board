@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 
-import '../../helpers/constants.dart';
+import '../helpers/constants.dart';
 
 class AuthButton extends StatelessWidget {
   const AuthButton({
@@ -11,12 +11,14 @@ class AuthButton extends StatelessWidget {
     required this.name,
     required this.onTap,
     this.status = false,
+    this.color = kVioletShade,
   }) : super(key: key);
 
   final Size size;
   final String name;
   final Function onTap;
   final bool status;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +31,7 @@ class AuthButton extends StatelessWidget {
         height: 50,
         width: size.width * 0.4,
         decoration: BoxDecoration(
-          color: status ? kOrangeShade : kVioletShade,
+          color: status ? kOrangeShade : color,
           borderRadius: BorderRadius.circular(15),
         ),
         child: Text(

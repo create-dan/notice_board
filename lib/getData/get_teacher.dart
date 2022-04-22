@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:notice_board/helpers/constants.dart';
 import 'package:notice_board/models/teachers_model.dart';
 import 'package:notice_board/screens/auth_screens/landing_screen.dart';
-import 'package:notice_board/screens/auth_screens/student_login_screen.dart';
 
 class GetTeachers extends StatefulWidget {
   const GetTeachers({Key? key}) : super(key: key);

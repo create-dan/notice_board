@@ -14,11 +14,9 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       body: InkWell(
         onTap: () {
-          AuthHelper().signOut(context);
+          AuthHelper().signOut(context: context);
         },
-        child: Container(
-          color: Colors.red,
-        ),
+        child: Container(color: Colors.red),
       ),
     );
   }
