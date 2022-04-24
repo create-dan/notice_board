@@ -21,15 +21,16 @@ class MyUserInfo {
     userCollection.doc(uid).set({
       "Info": {
         "name": name,
-        if (!isAdmin) "prn": prn,
+        if (!isAdmin) "prn": prn.toString().toUpperCase(),
         "email": email,
         "password": password,
         "uid": uid,
         "isAdmin": isAdmin,
-        "fullName": '',
+        "year": '',
+        "branch": '',
+        "club": "",
         "imageUrl": '',
-        "bio": '',
-        "dob": '',
+        "category": '',
         "timeStamp": DateTime.now().toUtc().millisecondsSinceEpoch,
         "createdAt": Timestamp.now(),
       }
@@ -64,9 +65,19 @@ class MyUserInfo {
   }
 
   // Update UserDetails
-  Future<void> updateUserDetails(fullName, imageUrl, bio, dob) async {
+  Future<void> updateUserDetails({
+    String? year,
+    String branch = "",
+    String? club,
+    String imageUrl = "",
+    String category = "",
+    bool isAdmin = false,
+  }) async {
+    String collectionName = isAdmin ? "admins" : "students";
+
     final CollectionReference userCollection =
-        FirebaseFirestore.instance.collection('users');
+        FirebaseFirestore.instance.collection(collectionName);
+
     FirebaseAuth auth = FirebaseAuth.instance;
     String uid = auth.currentUser!.uid.toString();
 
@@ -74,10 +85,11 @@ class MyUserInfo {
         .doc(uid)
         .set({
           "Info": {
-            "fullName": fullName,
+            "year": year,
+            "club": club,
+            "branch": branch,
+            "category": category,
             "imageUrl": imageUrl,
-            "bio": bio,
-            "dob": dob,
           }
         }, SetOptions(merge: true))
         .then((value) => print("User Details Updated"))

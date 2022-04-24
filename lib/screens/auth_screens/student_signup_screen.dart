@@ -38,9 +38,6 @@ class _StudentSignupScreenState extends State<StudentSignupScreen> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    if (TeachersModel.teachersEmail.isNotEmpty) {
-      debugPrint(TeachersModel.teachersEmail[0]);
-    }
 
     return Scaffold(
       body: ModalProgressHUD(
@@ -50,7 +47,8 @@ class _StudentSignupScreenState extends State<StudentSignupScreen> {
           child: Form(
             key: _formFieldKey,
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 32.0),
+              padding: const EdgeInsets.symmetric(horizontal: 32.0)
+                  .copyWith(top: 80),
               child: SingleChildScrollView(
                 physics: BouncingScrollPhysics(),
                 child: Column(

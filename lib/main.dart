@@ -4,6 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:notice_board/getData/get_teacher.dart';
+import 'package:notice_board/screens/profile_setup/student_profile_setup.dart';
+import 'package:notice_board/screens/profile_setup/teacher_profile_setup.dart';
 
 User? user = FirebaseAuth.instance.currentUser;
 
@@ -23,6 +25,7 @@ class MyApp extends StatelessWidget {
       title: 'Notice Board App',
       theme: ThemeData(primarySwatch: Colors.purple),
       home: GetTeachers(),
+      // home: AdminProfileSetup(),
     );
   }
 }

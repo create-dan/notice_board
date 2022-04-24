@@ -32,9 +32,6 @@ class _StudentLoginScreenState extends State<StudentLoginScreen> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    if (TeachersModel.teachersEmail.isNotEmpty) {
-      debugPrint(TeachersModel.teachersEmail[0]);
-    }
 
     return Scaffold(
       body: ModalProgressHUD(

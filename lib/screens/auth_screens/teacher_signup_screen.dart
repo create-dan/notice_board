@@ -46,7 +46,8 @@ class _TeacherSignupScreenState extends State<TeacherSignupScreen> {
           child: Form(
             key: _formFieldKey,
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 32.0),
+              padding: const EdgeInsets.symmetric(horizontal: 32.0)
+                  .copyWith(top: 80),
               child: SingleChildScrollView(
                 physics: BouncingScrollPhysics(),
                 child: Column(

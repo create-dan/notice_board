@@ -7,6 +7,8 @@ import 'package:notice_board/models/teachers_model.dart';
 import 'package:notice_board/models/user_model.dart';
 import 'package:notice_board/screens/auth_screens/student_login_screen.dart';
 
+import '../screens/auth_screens/teacher_login_screen.dart';
+
 class AuthHelper {
   bool isAdmin = UserModel.isAdmin;
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -67,14 +69,16 @@ class AuthHelper {
   Future signOut({required BuildContext context, bool isAdmin = false}) async {
     await _auth.signOut();
     debugPrint('signout');
-    Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(
-            builder: (BuildContext context) => StudentLoginScreen()),
-        (route) => false);
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) =>
+            isAdmin ? TeacherLoginScreen() : StudentLoginScreen(),
+      ),
+    );
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        backgroundColor: kVioletShade,
+        backgroundColor: isAdmin ? kOrangeShade : kVioletShade,
         content: Text(
           'Logout Successfully',
           style: TextStyle(color: Colors.white),

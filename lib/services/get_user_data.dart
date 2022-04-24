@@ -48,16 +48,20 @@ class GetUserData extends StatelessWidget {
           if (snapshot.connectionState == ConnectionState.done) {
             Map<String, dynamic> data =
                 snapshot.data!.data() as Map<String, dynamic>;
+
             UserModel.name = data['Info']['name'].toString();
             UserModel.email = data['Info']['email'].toString();
             UserModel.password = data['Info']['password'].toString();
+            UserModel.imageUrl = data['Info']['imageUrl'].toString();
+            UserModel.branch = data['Info']['branch'].toString();
+            UserModel.uid = data['Info']['uid'].toString();
+
             if (!UserModel.isAdmin) {
               UserModel.prn = data['Info']['prn'].toString();
             }
-            // UserModel.imageUrl = data['Info']['imageUrl'].toString();
-            // UserModel.bio = data['Info']['bio'].toString();
-            // UserModel.dob = data['Info']['dob'].toString();
-            UserModel.uid = data['Info']['uid'].toString();
+            if (!UserModel.isAdmin) {
+              UserModel.year = data['Info']['year'].toString();
+            }
 
             if (!auth.currentUser!.emailVerified) {
               print("Email not verified");
