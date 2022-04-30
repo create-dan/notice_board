@@ -18,7 +18,7 @@ import 'package:path/path.dart' as path;
 import 'package:provider/provider.dart';
 import '../../services/auth_helper.dart';
 import '../../services/firebase_upload.dart';
-import '../../services/get_user_data.dart';
+import '../../services/get_student_data.dart';
 import '../../services/my_user_info.dart';
 import '../../widgets/my_button.dart';
 import '../../widgets/my_text_input.dart';
@@ -45,14 +45,54 @@ class _AdminProfileSetupState extends State<AdminProfileSetup> {
       'https://thumbs.dreamstime.com/b/solid-purple-gradient-user-icon-web-mobile-design-interface-ui-ux-developer-app-137467998.jpg';
 
   bool showSpinner = false;
-  String? year;
-  String? branch;
+  String? selectedYear;
+  String? selectedBranch;
   String? club;
-  String? adminCategory;
+  String? selectedAdminCategory;
+
+  void uploadData() async {
+    setState(() {
+      showSpinner = true;
+    });
+    setState(() {
+      UserModel.adminCategory = selectedAdminCategory;
+      UserModel.year = selectedYear ?? "";
+      UserModel.branch = selectedBranch ?? "";
+    });
+    await uploadImage();
+    await MyUserInfo().updateUserDetails(
+      name: UserModel.name,
+      branch: selectedBranch.toString(),
+      year: selectedYear.toString(),
+      category: selectedAdminCategory.toString(),
+      imageUrl: urlDownload,
+      isAdmin: true,
+    );
+
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => GetStudentData(),
+      ),
+    );
+  }
+
+  void showErrorMsg() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: kOrangeShade,
+        content: Text(
+          'All Fields are mandatory',
+          style: TextStyle(color: Colors.white),
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+
     DropdownMenuItem<String> buildMenuCategory(String category) =>
         DropdownMenuItem(
           value: category,
@@ -64,6 +104,7 @@ class _AdminProfileSetupState extends State<AdminProfileSetup> {
             ],
           ),
         );
+
     DropdownMenuItem<String> buildMenuBranch(String branch) => DropdownMenuItem(
           value: branch,
           child: Row(
@@ -190,16 +231,16 @@ class _AdminProfileSetupState extends State<AdminProfileSetup> {
                                 items: category.map(buildMenuCategory).toList(),
                                 onChanged: (value) {
                                   setState(() {
-                                    adminCategory = value;
+                                    selectedAdminCategory = value;
                                   });
                                 },
-                                value: adminCategory,
+                                value: selectedAdminCategory,
                               ),
                             ),
                           ),
                         ),
-                        if (adminCategory != "Dean" &&
-                            adminCategory != "Principal")
+                        if (selectedAdminCategory != "Dean" &&
+                            selectedAdminCategory != "Principal")
                           Padding(
                             padding: const EdgeInsets.symmetric(
                                 vertical: 8, horizontal: 32),
@@ -226,15 +267,15 @@ class _AdminProfileSetupState extends State<AdminProfileSetup> {
                                   items: branches.map(buildMenuBranch).toList(),
                                   onChanged: (value) {
                                     setState(() {
-                                      branch = value;
+                                      selectedBranch = value;
                                     });
                                   },
-                                  value: branch,
+                                  value: selectedBranch,
                                 ),
                               ),
                             ),
                           ),
-                        if (adminCategory == "Class Representative")
+                        if (selectedAdminCategory == "Class Representative")
                           Padding(
                             padding: const EdgeInsets.symmetric(
                                 vertical: 8, horizontal: 32),
@@ -262,10 +303,10 @@ class _AdminProfileSetupState extends State<AdminProfileSetup> {
                                       academicYears.map(buildMenuYear).toList(),
                                   onChanged: (value) {
                                     setState(() {
-                                      year = value;
+                                      selectedYear = value;
                                     });
                                   },
-                                  value: year,
+                                  value: selectedYear,
                                 ),
                               ),
                             ),
@@ -274,28 +315,36 @@ class _AdminProfileSetupState extends State<AdminProfileSetup> {
                           padding: const EdgeInsets.symmetric(vertical: 32.0),
                           child: InkWell(
                             onTap: () async {
-                              // print(dob);
-                              print(branch);
-                              FocusScope.of(context).unfocus();
-                              setState(() {
-                                showSpinner = true;
-                              });
-
-                              await uploadImage();
-                              await MyUserInfo().updateUserDetails(
-                                branch: branch.toString(),
-                                year: year.toString(),
-                                category: adminCategory.toString(),
-                                imageUrl: urlDownload,
-                                isAdmin: true,
-                              );
-
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => GetUserData(),
-                                ),
-                              );
+                              print("adminCategory $selectedAdminCategory");
+                              print("Branch $selectedBranch");
+                              print("Year $selectedYear");
+                              if (selectedAdminCategory == "Dean" ||
+                                  selectedAdminCategory == "Principal") {
+                                // Fluttertoast.showToast(msg: "DP");
+                                uploadData();
+                              } else if (selectedAdminCategory == "H.O.D." ||
+                                  selectedAdminCategory == "Class Teacher") {
+                                if (selectedBranch == null ||
+                                    selectedBranch == "") {
+                                  showErrorMsg();
+                                } else {
+                                  // Fluttertoast.showToast(msg: "HC");
+                                  uploadData();
+                                }
+                              } else if (selectedAdminCategory ==
+                                  "Class Representative") {
+                                if ((selectedBranch == null ||
+                                        selectedBranch == "") ||
+                                    (selectedYear == null ||
+                                        selectedYear == "")) {
+                                  showErrorMsg();
+                                } else {
+                                  Fluttertoast.showToast(msg: "CR");
+                                  uploadData();
+                                }
+                              } else {
+                                showErrorMsg();
+                              }
                             },
                             child: MyButton(text: 'Done', isAdmin: true),
                           ),

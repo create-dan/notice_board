@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:notice_board/models/user_model.dart';
 
 class MyUserInfo {
   //Store User Details
@@ -36,11 +37,10 @@ class MyUserInfo {
       }
     }, SetOptions(merge: true)).then((value) async {
       print("User Details Added");
-      await storeNumberOfUsers();
+      // await storeNumberOfUsers();
     }).catchError((error) {
       print("Failed to add user: $error");
     });
-
     return;
   }
 
@@ -66,6 +66,7 @@ class MyUserInfo {
 
   // Update UserDetails
   Future<void> updateUserDetails({
+    String? name,
     String? year,
     String branch = "",
     String? club,
@@ -85,6 +86,7 @@ class MyUserInfo {
         .doc(uid)
         .set({
           "Info": {
+            "name": name,
             "year": year,
             "club": club,
             "branch": branch,

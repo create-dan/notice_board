@@ -1,10 +1,14 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:notice_board/helpers/constants.dart';
 import 'package:notice_board/models/teachers_model.dart';
 import 'package:notice_board/screens/auth_screens/landing_screen.dart';
+import 'package:notice_board/services/get_student_data.dart';
+
+User? user = FirebaseAuth.instance.currentUser;
 
 class GetTeachers extends StatefulWidget {
   const GetTeachers({Key? key}) : super(key: key);
@@ -30,7 +34,6 @@ class _GetTeachersState extends State<GetTeachers> {
             );
           }
           if (snapshot.hasData && !snapshot.data!.exists) {
-            debugPrint(snapshot.data!.get("emails"));
             return Container();
           }
           if (snapshot.connectionState == ConnectionState.done) {
@@ -40,7 +43,8 @@ class _GetTeachersState extends State<GetTeachers> {
             print(data['emails']);
 
             TeachersModel.teachersEmail = data['emails'];
-            return LandingScreen();
+            return user == null ? LandingScreen() : GetStudentData();
+            // return LandingScreen();
           }
           return Center(
             child: CircularProgressIndicator(color: kVioletShade),

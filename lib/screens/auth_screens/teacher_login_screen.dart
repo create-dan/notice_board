@@ -9,7 +9,7 @@ import 'package:notice_board/models/teachers_model.dart';
 import 'package:notice_board/widgets/auth_text_field.dart';
 import 'package:notice_board/screens/auth_screens/student_signup_screen.dart';
 import 'package:notice_board/screens/auth_screens/teacher_signup_screen.dart';
-import 'package:notice_board/services/get_user_data.dart';
+import 'package:notice_board/services/get_student_data.dart';
 import '../../models/user_model.dart';
 import '../../services/auth_helper.dart';
 import '../../widgets/auth_button.dart';
@@ -41,7 +41,8 @@ class _TeacherLoginScreenState extends State<TeacherLoginScreen> {
           child: Form(
             key: _formFieldKey,
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 32.0),
+              padding: const EdgeInsets.symmetric(horizontal: 32.0)
+                  .copyWith(top: 70),
               child: SingleChildScrollView(
                 physics: BouncingScrollPhysics(),
                 child: Column(
@@ -56,14 +57,14 @@ class _TeacherLoginScreenState extends State<TeacherLoginScreen> {
                     ),
                     SizedBox(height: 20),
                     AuthTextField(
-                      status: true,
+                      isAdmin: true,
                       name: 'Email',
                       controller: emailController,
                       icon: Icons.mail,
                     ),
                     SizedBox(height: 25),
                     AuthTextField(
-                      status: true,
+                      isAdmin: true,
                       name: 'Password',
                       controller: passwordController,
                       icon: Icons.vpn_key,
@@ -72,15 +73,20 @@ class _TeacherLoginScreenState extends State<TeacherLoginScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        Text(
-                          "Forget Password?",
-                          // style: TextStyle(color: kLightBlueShadeColor),
+                        InkWell(
+                          onTap: () {
+                            Fluttertoast.showToast(msg: "Forget Password...");
+                          },
+                          child: Text(
+                            "Forget Password?",
+                            // style: TextStyle(color: kLightBlueShadeColor),
+                          ),
                         )
                       ],
                     ),
                     SizedBox(height: 30),
                     AuthButton(
-                      status: true,
+                      isAdmin: true,
                       size: size,
                       name: 'Login',
                       onTap: () async {
@@ -105,7 +111,7 @@ class _TeacherLoginScreenState extends State<TeacherLoginScreen> {
                               Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => GetUserData(),
+                                  builder: (context) => GetStudentData(),
                                 ),
                               );
                             } else {

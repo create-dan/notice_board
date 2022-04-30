@@ -9,10 +9,11 @@ import 'package:notice_board/helpers/constants.dart';
 import 'package:notice_board/helpers/validators.dart';
 import 'package:notice_board/models/teachers_model.dart';
 import 'package:notice_board/models/user_model.dart';
+import 'package:notice_board/screens/auth_screens/verify_user_screen.dart';
 import 'package:notice_board/widgets/auth_text_field.dart';
 import 'package:notice_board/screens/auth_screens/student_login_screen.dart';
 import 'package:notice_board/screens/home_page.dart';
-import 'package:notice_board/services/get_user_data.dart';
+import 'package:notice_board/services/get_student_data.dart';
 import '../../services/auth_helper.dart';
 import '../../services/my_user_info.dart';
 import '../../widgets/auth_button.dart';
@@ -104,6 +105,7 @@ class _StudentSignupScreenState extends State<StudentSignupScreen> {
                     AuthButton(
                       size: size,
                       name: 'SignUp',
+                      isAdmin: UserModel.isAdmin,
                       onTap: () async {
                         if (_formFieldKey.currentState!.validate()) {
                           setState(() {
@@ -129,7 +131,7 @@ class _StudentSignupScreenState extends State<StudentSignupScreen> {
                               Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => GetUserData(),
+                                  builder: (context) => GetStudentData(),
                                 ),
                               );
                             } else {

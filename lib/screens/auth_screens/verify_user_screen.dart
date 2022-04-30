@@ -9,7 +9,7 @@ import 'package:notice_board/helpers/constants.dart';
 import 'package:notice_board/models/user_model.dart';
 import 'package:notice_board/screens/profile_setup/student_profile_setup.dart';
 import 'package:notice_board/screens/home_page.dart';
-import 'package:notice_board/screens/profile_setup/teacher_profile_setup.dart';
+import 'package:notice_board/screens/profile_setup/admin_profile_setup.dart';
 import '../../services/auth_helper.dart';
 
 class VerifyUserScreen extends StatefulWidget {

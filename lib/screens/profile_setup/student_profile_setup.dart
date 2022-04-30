@@ -18,7 +18,7 @@ import 'package:path/path.dart' as path;
 import 'package:provider/provider.dart';
 import '../../services/auth_helper.dart';
 import '../../services/firebase_upload.dart';
-import '../../services/get_user_data.dart';
+import '../../services/get_student_data.dart';
 import '../../services/my_user_info.dart';
 import '../../widgets/my_button.dart';
 import '../../widgets/my_text_input.dart';
@@ -45,9 +45,46 @@ class _StudentProfileSetupState extends State<StudentProfileSetup> {
       'https://thumbs.dreamstime.com/b/solid-purple-gradient-user-icon-web-mobile-design-interface-ui-ux-developer-app-137467998.jpg';
 
   bool showSpinner = false;
-  String? year;
-  String? branch;
-  String? club;
+  String? selectedYear;
+  String? selectedBranch;
+
+  void uploadData() async {
+    setState(() {
+      showSpinner = true;
+    });
+    setState(() {
+      UserModel.year = selectedYear ?? "";
+      UserModel.branch = selectedBranch ?? "";
+    });
+    await uploadImage();
+    await MyUserInfo().updateUserDetails(
+      name: UserModel.name,
+      branch: selectedBranch.toString(),
+      year: selectedYear.toString(),
+      category: "",
+      imageUrl: urlDownload,
+      isAdmin: false,
+    );
+
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => GetStudentData(),
+      ),
+    );
+  }
+
+  void showErrorMsg() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: kVioletShade,
+        content: Text(
+          'All Fields are mandatory',
+          style: TextStyle(color: Colors.white),
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -86,9 +123,7 @@ class _StudentProfileSetupState extends State<StudentProfileSetup> {
     return SafeArea(
       child: ModalProgressHUD(
         inAsyncCall: showSpinner,
-        progressIndicator: CircularProgressIndicator(
-          color: kGreenShadeColor,
-        ),
+        progressIndicator: CircularProgressIndicator(color: kVioletShade),
         child: WillPopScope(
           onWillPop: () async {
             await AuthHelper().signOut(context: context);
@@ -193,10 +228,10 @@ class _StudentProfileSetupState extends State<StudentProfileSetup> {
                                     academicYears.map(buildMenuYear).toList(),
                                 onChanged: (value) {
                                   setState(() {
-                                    year = value;
+                                    selectedYear = value;
                                   });
                                 },
-                                value: year,
+                                value: selectedYear,
                               ),
                             ),
                           ),
@@ -227,44 +262,10 @@ class _StudentProfileSetupState extends State<StudentProfileSetup> {
                                 items: branches.map(buildMenuBranch).toList(),
                                 onChanged: (value) {
                                   setState(() {
-                                    branch = value;
+                                    selectedBranch = value;
                                   });
                                 },
-                                value: branch,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 8, horizontal: 32),
-                          child: Container(
-                            padding: EdgeInsets.symmetric(horizontal: 16),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(7),
-                              color: Colors.grey.shade100,
-                              border: Border.all(
-                                  color:
-                                      Colors.grey.shade700.withOpacity(0.15)),
-                            ),
-                            child: DropdownButtonHideUnderline(
-                              child: DropdownButton<String>(
-                                hint: Row(
-                                  children: [
-                                    Icon(FontAwesomeIcons.handPeace,
-                                        color: kVioletShade),
-                                    SizedBox(width: 10),
-                                    Text("Choose clubs"),
-                                  ],
-                                ),
-                                isExpanded: true,
-                                items: clubs.map(buildMenuClub).toList(),
-                                onChanged: (value) {
-                                  setState(() {
-                                    club = value;
-                                  });
-                                },
-                                value: club,
+                                value: selectedBranch,
                               ),
                             ),
                           ),
@@ -274,28 +275,17 @@ class _StudentProfileSetupState extends State<StudentProfileSetup> {
                           child: InkWell(
                               onTap: () async {
                                 // print(dob);
-                                print(year);
-                                print(branch);
-                                print(club);
-                                FocusScope.of(context).unfocus();
-                                setState(() {
-                                  showSpinner = true;
-                                });
+                                print(selectedYear);
+                                print(selectedBranch);
 
-                                await uploadImage();
-                                await MyUserInfo().updateUserDetails(
-                                  year: year.toString(),
-                                  branch: branch.toString(),
-                                  club: club.toString(),
-                                  imageUrl: urlDownload,
-                                );
-
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => GetUserData(),
-                                  ),
-                                );
+                                if (selectedBranch == null ||
+                                    selectedBranch == "" ||
+                                    selectedYear == null ||
+                                    selectedYear == "") {
+                                  showErrorMsg();
+                                } else {
+                                  uploadData();
+                                }
                               },
                               child: MyButton(text: 'Done')),
                         ),

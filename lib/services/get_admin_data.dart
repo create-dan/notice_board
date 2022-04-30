@@ -4,30 +4,31 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:notice_board/helpers/constants.dart';
-import 'package:notice_board/screens/home_page.dart';
-import 'package:provider/provider.dart';
-
+import 'package:notice_board/screens/profile_setup/student_profile_setup.dart';
+import 'package:notice_board/screens/profile_setup/admin_profile_setup.dart';
+import 'package:notice_board/screens/upload_notice_screen.dart';
+import 'package:notice_board/screens/user_profile.dart';
 import '../models/user_model.dart';
 import '../screens/auth_screens/verify_user_screen.dart';
 
-class GetUserData extends StatelessWidget {
-  const GetUserData({Key? key}) : super(key: key);
+class GetAdminData extends StatelessWidget {
+  const GetAdminData({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    bool isAdmin = UserModel.isAdmin;
-
     FirebaseAuth auth = FirebaseAuth.instance;
     String uid = auth.currentUser!.uid.toString();
     String documentId = uid;
     print('GetUserData');
-    print("isAdmin $isAdmin");
     print("Uid $documentId");
 
-    String collectionName = isAdmin ? "admins" : "students";
+    String collectionName = "admins";
 
     CollectionReference users =
         FirebaseFirestore.instance.collection(collectionName);
+
+    print("users.id");
+    print(users.id);
 
     return Scaffold(
       body: FutureBuilder<DocumentSnapshot>(
@@ -40,7 +41,7 @@ class GetUserData extends StatelessWidget {
             );
           }
           if (snapshot.hasData && !snapshot.data!.exists) {
-            print("Not Ok");
+            print("Not Admin");
             return Center(
               child: CircularProgressIndicator(color: kVioletShade),
             );
@@ -50,28 +51,31 @@ class GetUserData extends StatelessWidget {
                 snapshot.data!.data() as Map<String, dynamic>;
 
             UserModel.name = data['Info']['name'].toString();
+            UserModel.isAdmin = data['Info']['isAdmin'];
             UserModel.email = data['Info']['email'].toString();
             UserModel.password = data['Info']['password'].toString();
             UserModel.imageUrl = data['Info']['imageUrl'].toString();
             UserModel.branch = data['Info']['branch'].toString();
             UserModel.uid = data['Info']['uid'].toString();
+            UserModel.adminCategory = data['Info']['category'].toString();
+            UserModel.prn = data['Info']['prn'].toString();
+            UserModel.year = data['Info']['year'].toString();
 
-            if (!UserModel.isAdmin) {
-              UserModel.prn = data['Info']['prn'].toString();
-            }
-            if (!UserModel.isAdmin) {
-              UserModel.year = data['Info']['year'].toString();
-            }
-
-            if (!auth.currentUser!.emailVerified) {
-              print("Email not verified");
+            if (auth.currentUser!.emailVerified) {
+              print("Email verified");
+              print("Admin Category ${UserModel.adminCategory}");
+              if (UserModel.adminCategory == null ||
+                  UserModel.adminCategory == "") {
+                return AdminProfileSetup();
+              }
+            } else {
               return VerifyUserScreen();
             }
-            return HomePage();
+            // return HomePage();
+            return UserProfileScreen();
           }
           return Center(
-            child: CircularProgressIndicator(
-                color: isAdmin ? kOrangeShade : kVioletShade),
+            child: CircularProgressIndicator(color: kOrangeShade),
           );
         },
       ),

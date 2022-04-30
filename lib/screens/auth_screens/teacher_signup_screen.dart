@@ -8,11 +8,10 @@ import 'package:notice_board/helpers/constants.dart';
 import 'package:notice_board/helpers/validators.dart';
 import 'package:notice_board/models/teachers_model.dart';
 import 'package:notice_board/models/user_model.dart';
+import 'package:notice_board/services/get_admin_data.dart';
 import 'package:notice_board/widgets/auth_text_field.dart';
-import 'package:notice_board/screens/auth_screens/student_login_screen.dart';
 import 'package:notice_board/screens/auth_screens/teacher_login_screen.dart';
-import 'package:notice_board/screens/home_page.dart';
-import 'package:notice_board/services/get_user_data.dart';
+import 'package:notice_board/services/get_student_data.dart';
 import '../../services/auth_helper.dart';
 import '../../services/my_user_info.dart';
 import '../../widgets/auth_button.dart';
@@ -61,7 +60,7 @@ class _TeacherSignupScreenState extends State<TeacherSignupScreen> {
                     ),
                     SizedBox(height: 20),
                     AuthTextField(
-                      status: true,
+                      isAdmin: true,
                       name: 'Name',
                       controller: nameController,
                       icon: FontAwesomeIcons.user,
@@ -69,7 +68,7 @@ class _TeacherSignupScreenState extends State<TeacherSignupScreen> {
                     ),
                     SizedBox(height: 20),
                     AuthTextField(
-                      status: true,
+                      isAdmin: true,
                       name: 'Email',
                       controller: emailController,
                       icon: Icons.mail,
@@ -77,7 +76,7 @@ class _TeacherSignupScreenState extends State<TeacherSignupScreen> {
                     ),
                     SizedBox(height: 20),
                     AuthTextField(
-                      status: true,
+                      isAdmin: true,
                       name: 'Password',
                       controller: passwordController,
                       icon: Icons.vpn_key,
@@ -85,7 +84,7 @@ class _TeacherSignupScreenState extends State<TeacherSignupScreen> {
                     ),
                     SizedBox(height: 25),
                     AuthTextField(
-                      status: true,
+                      isAdmin: true,
                       name: 'Confirm Password',
                       controller: cPasswordController,
                       icon: Icons.vpn_key,
@@ -98,7 +97,7 @@ class _TeacherSignupScreenState extends State<TeacherSignupScreen> {
                     ),
                     SizedBox(height: 30),
                     AuthButton(
-                      status: true,
+                      isAdmin: true,
                       size: size,
                       name: 'SignUp',
                       onTap: () async {
@@ -127,7 +126,7 @@ class _TeacherSignupScreenState extends State<TeacherSignupScreen> {
                               Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => GetUserData(),
+                                  builder: (context) => GetAdminData(),
                                 ),
                               );
                             } else {

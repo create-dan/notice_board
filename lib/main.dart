@@ -4,15 +4,25 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:notice_board/getData/get_teacher.dart';
+import 'package:notice_board/providers/user_model_provider.dart';
 import 'package:notice_board/screens/profile_setup/student_profile_setup.dart';
-import 'package:notice_board/screens/profile_setup/teacher_profile_setup.dart';
+import 'package:notice_board/screens/profile_setup/admin_profile_setup.dart';
+import 'package:notice_board/screens/upload_notice_screen.dart';
+import 'package:provider/provider.dart';
 
 User? user = FirebaseAuth.instance.currentUser;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => UserModelProvider()),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -25,7 +35,8 @@ class MyApp extends StatelessWidget {
       title: 'Notice Board App',
       theme: ThemeData(primarySwatch: Colors.purple),
       home: GetTeachers(),
-      // home: AdminProfileSetup(),
+      // home: StudentProfileSetup(),
+      // home: UploadNoticeScreen(),
     );
   }
 }

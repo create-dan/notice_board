@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:notice_board/models/user_model.dart';
 
 import '../helpers/constants.dart';
 
@@ -10,18 +11,19 @@ class AuthButton extends StatelessWidget {
     required this.size,
     required this.name,
     required this.onTap,
-    this.status = false,
-    this.color = kVioletShade,
+    required this.isAdmin,
   }) : super(key: key);
 
   final Size size;
   final String name;
   final Function onTap;
-  final bool status;
-  final Color color;
+  final bool isAdmin;
 
   @override
   Widget build(BuildContext context) {
+    print("Status $isAdmin");
+    Color mainColor = isAdmin ? kOrangeShade : kVioletShade;
+
     return InkWell(
       onTap: () {
         onTap();
@@ -31,7 +33,7 @@ class AuthButton extends StatelessWidget {
         height: 50,
         width: size.width * 0.4,
         decoration: BoxDecoration(
-          color: status ? kOrangeShade : color,
+          color: mainColor,
           borderRadius: BorderRadius.circular(15),
         ),
         child: Text(

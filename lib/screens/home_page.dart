@@ -14,7 +14,7 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       body: InkWell(
         onTap: () {
-          AuthHelper().signOut(context: context);
+          AuthHelper().signOut(context: context, isAdmin: UserModel.isAdmin);
         },
         child: Container(color: Colors.red),
       ),

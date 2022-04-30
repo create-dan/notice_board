@@ -12,7 +12,7 @@ class AuthTextField extends StatelessWidget {
     this.textInputAction = TextInputAction.next,
     required this.controller,
     required this.icon,
-    this.status = false,
+    this.isAdmin = false,
   }) : super(key: key);
 
   final String name;
@@ -20,10 +20,12 @@ class AuthTextField extends StatelessWidget {
   final TextInputAction textInputAction;
   final TextEditingController controller;
   final IconData icon;
-  final bool status;
+  final bool isAdmin;
 
   @override
   Widget build(BuildContext context) {
+    Color myColor = isAdmin ? kOrangeShade : kVioletShade;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -35,7 +37,7 @@ class AuthTextField extends StatelessWidget {
               height: 50,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(7),
-                color: status
+                color: isAdmin
                     ? kOrangeShade.withOpacity(0.2)
                     : kVioletShade.withOpacity(0.2),
                 border: Border.all(
@@ -43,23 +45,31 @@ class AuthTextField extends StatelessWidget {
                 ),
               ),
             ),
-            TextFormField(
-              validator: validator,
-              controller: controller,
-              keyboardType: TextInputType.emailAddress,
-              style: TextStyle(fontSize: 18),
-              cursorColor: status ? kOrangeShade : kVioletShade,
-              textInputAction: textInputAction,
-              decoration: InputDecoration(
-                hintText: name,
-                // contentPadding: EdgeInsets.symmetric(horizontal: 32),
-                prefixIcon:
-                    Icon(icon, color: status ? kOrangeShade : kVioletShade),
-                border: InputBorder.none,
-                focusedBorder: InputBorder.none,
-                enabledBorder: InputBorder.none,
-                errorBorder: InputBorder.none,
-                disabledBorder: InputBorder.none,
+            Theme(
+              data: ThemeData(
+                textSelectionTheme: TextSelectionThemeData(
+                  selectionColor: myColor,
+                  cursorColor: myColor,
+                  selectionHandleColor: myColor,
+                ),
+              ),
+              child: TextFormField(
+                validator: validator,
+                controller: controller,
+                keyboardType: TextInputType.emailAddress,
+                style: TextStyle(fontSize: 18),
+                cursorColor: myColor,
+                textInputAction: textInputAction,
+                decoration: InputDecoration(
+                  hintText: name,
+                  // contentPadding: EdgeInsets.symmetric(horizontal: 32),
+                  prefixIcon: Icon(icon, color: myColor),
+                  border: InputBorder.none,
+                  focusedBorder: InputBorder.none,
+                  enabledBorder: InputBorder.none,
+                  errorBorder: InputBorder.none,
+                  disabledBorder: InputBorder.none,
+                ),
               ),
             ),
           ],

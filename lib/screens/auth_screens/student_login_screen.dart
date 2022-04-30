@@ -12,7 +12,7 @@ import 'package:notice_board/widgets/auth_text_field.dart';
 import 'package:notice_board/screens/auth_screens/student_signup_screen.dart';
 import 'package:notice_board/screens/home_page.dart';
 import 'package:notice_board/services/auth_helper.dart';
-import 'package:notice_board/services/get_user_data.dart';
+import 'package:notice_board/services/get_student_data.dart';
 import '../../widgets/auth_button.dart';
 
 class StudentLoginScreen extends StatefulWidget {
@@ -81,6 +81,7 @@ class _StudentLoginScreenState extends State<StudentLoginScreen> {
                     AuthButton(
                       size: size,
                       name: 'Login',
+                      isAdmin: UserModel.isAdmin,
                       onTap: () async {
                         if (_formFieldKey.currentState!.validate()) {
                           FocusScope.of(context).unfocus();
@@ -100,7 +101,7 @@ class _StudentLoginScreenState extends State<StudentLoginScreen> {
                               Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => GetUserData(),
+                                  builder: (context) => GetStudentData(),
                                 ),
                               );
                             } else {

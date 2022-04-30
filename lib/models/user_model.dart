@@ -4,6 +4,7 @@ class UserModel {
   static String? email;
   static String? imageUrl;
   static String? year;
+  static String? adminCategory;
   static String? password;
   static String? branch;
   static String? uid;
