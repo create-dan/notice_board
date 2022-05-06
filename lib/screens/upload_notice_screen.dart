@@ -2,6 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:notice_board/helpers/constants.dart';
+import 'package:notice_board/models/notice_model.dart';
+import 'package:notice_board/screens/upload_notice_image_screen.dart';
+import 'package:notice_board/widgets/auth_button.dart';
+import 'package:notice_board/widgets/auth_text_field.dart';
 
 class UploadNoticeScreen extends StatefulWidget {
   const UploadNoticeScreen({Key? key}) : super(key: key);
@@ -11,67 +15,185 @@ class UploadNoticeScreen extends StatefulWidget {
 }
 
 class _UploadNoticeScreenState extends State<UploadNoticeScreen> {
+  String? selectedNoticeType;
+
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _subjectController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    return Scaffold(
-      // appBar: AppBar(),
+    DropdownMenuItem<String> buildMenuCategory(String category) =>
+        DropdownMenuItem(
+          value: category,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 8.0),
+            child: Text(category),
+          ),
+        );
 
+    return Scaffold(
+      appBar: AppBar(backgroundColor: kOrangeShade),
       body: Column(
         children: [
-          SizedBox(height: size.height * 0.1),
-          Text(
-            "Create a notice",
-            style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+          SizedBox(height: 30),
+          Container(
+            alignment: Alignment.center,
+            // height: size.height * 0.2,
+            child: Text(
+              "Fill the details",
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+            ),
           ),
-          SizedBox(height: size.height * 0.02),
-          Center(
-            child: Container(
-              height: size.height * 0.8,
-              width: size.width * 0.9,
-              decoration: BoxDecoration(
-                  color: kOrangeShade.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(15),
-                  border: Border.all(color: Colors.black, width: 2)),
-              child: Column(
-                children: [
-                  SizedBox(height: 30),
-                  Container(
-                    alignment: Alignment.center,
-                    height: 150,
-                    width: 150,
-                    decoration: BoxDecoration(
-                      color: Colors.red,
-                      borderRadius: BorderRadius.circular(25),
+          Expanded(
+            child: Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 18.0, vertical: 8),
+              child: Container(
+                decoration: BoxDecoration(
+                    // border: Border.all(color: kOrangeShade, width: 2),
                     ),
-                    child: Text(
-                      "Logo",
-                      style:
-                          TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+                child: Padding(
+                  padding: const EdgeInsets.all(18.0),
+                  child: SingleChildScrollView(
+                    physics: BouncingScrollPhysics(),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        UploadTextField(
+                          lines: 1,
+                          hint: "Title",
+                          controller: _titleController,
+                        ),
+                        SizedBox(height: 15),
+                        UploadTextField(
+                          lines: 7,
+                          hint: 'Description',
+                          controller: _descriptionController,
+                        ),
+                        SizedBox(height: 15),
+                        UploadTextField(
+                          lines: 1,
+                          hint: 'Subject',
+                          controller: _subjectController,
+                        ),
+                        SizedBox(height: 15),
+                        Text(
+                          "Notice Type",
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.w600),
+                        ),
+                        SizedBox(height: 5),
+                        Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(color: kOrangeShade, width: 2),
+                            borderRadius: BorderRadius.circular(7),
+                          ),
+                          child: DropdownButtonHideUnderline(
+                            child: DropdownButton<String>(
+                              hint: Padding(
+                                padding: const EdgeInsets.only(left: 8.0),
+                                child: Text("Choose Category"),
+                              ),
+                              isExpanded: true,
+                              items: noticeType.map(buildMenuCategory).toList(),
+                              onChanged: (value) {
+                                setState(() {
+                                  selectedNoticeType = value;
+                                });
+                              },
+                              value: selectedNoticeType,
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 30),
+                        Center(
+                          child: AuthButton(
+                            size: size,
+                            name: "Next",
+                            onTap: () {
+                              setState(() {
+                                NoticeModel.title = _titleController.text;
+                                NoticeModel.description =
+                                    _descriptionController.text;
+                                NoticeModel.subject = _subjectController.text;
+                                NoticeModel.noticeType = selectedNoticeType;
+                              });
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      UploadNoticeImageScreen(),
+                                ),
+                              );
+                            },
+                            isAdmin: true,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  SizedBox(height: 10),
-                  InkWell(
-                    child: Container(
-                      alignment: Alignment.center,
-                      height: 50,
-                      width: size.width * 0.5,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      child: Text(
-                        "Choose Notice",
-                        style: TextStyle(fontSize: 22),
-                      ),
-                    ),
-                  ),
-                ],
+                ),
               ),
             ),
           ),
         ],
       ),
+    );
+  }
+}
+
+class UploadTextField extends StatelessWidget {
+  const UploadTextField({
+    Key? key,
+    required this.lines,
+    required this.hint,
+    required this.controller,
+  }) : super(key: key);
+
+  final int lines;
+  final String hint;
+  final TextEditingController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          hint,
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+        ),
+        SizedBox(height: 5),
+        TextFormField(
+          minLines: lines,
+          maxLines: lines,
+          controller: controller,
+          decoration: InputDecoration(
+            focusColor: Colors.red,
+            fillColor: Colors.red,
+            hintText: hint,
+            border: OutlineInputBorder(
+              borderSide: const BorderSide(color: kOrangeShade, width: 2.0),
+              borderRadius: BorderRadius.all(
+                Radius.circular(7),
+              ),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderSide: const BorderSide(color: kOrangeShade, width: 2.0),
+              borderRadius: BorderRadius.all(Radius.circular(7)),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: const BorderSide(color: kOrangeShade, width: 2.0),
+              borderRadius: BorderRadius.all(
+                Radius.circular(7),
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

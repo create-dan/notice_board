@@ -34,9 +34,9 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Notice Board App',
       theme: ThemeData(primarySwatch: Colors.purple),
-      home: GetTeachers(),
+      // home: GetTeachers(),
       // home: StudentProfileSetup(),
-      // home: UploadNoticeScreen(),
+      home: UploadNoticeScreen(),
     );
   }
 }

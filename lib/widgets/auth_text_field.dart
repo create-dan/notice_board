@@ -13,6 +13,7 @@ class AuthTextField extends StatelessWidget {
     required this.controller,
     required this.icon,
     this.isAdmin = false,
+    this.isDescription = false,
   }) : super(key: key);
 
   final String name;
@@ -20,7 +21,7 @@ class AuthTextField extends StatelessWidget {
   final TextInputAction textInputAction;
   final TextEditingController controller;
   final IconData icon;
-  final bool isAdmin;
+  final bool isAdmin, isDescription;
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +35,7 @@ class AuthTextField extends StatelessWidget {
         Stack(
           children: [
             Container(
-              height: 50,
+              height: isDescription ? 50 * 4 : 50,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(7),
                 color: isAdmin
@@ -54,6 +55,8 @@ class AuthTextField extends StatelessWidget {
                 ),
               ),
               child: TextFormField(
+                maxLines: isDescription ? 4 : 1,
+                minLines: isDescription ? 4 : 1,
                 validator: validator,
                 controller: controller,
                 keyboardType: TextInputType.emailAddress,
