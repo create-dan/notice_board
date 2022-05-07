@@ -7,7 +7,7 @@ import 'package:notice_board/getData/get_teacher.dart';
 import 'package:notice_board/providers/user_model_provider.dart';
 import 'package:notice_board/screens/profile_setup/student_profile_setup.dart';
 import 'package:notice_board/screens/profile_setup/admin_profile_setup.dart';
-import 'package:notice_board/screens/upload_notice_screen.dart';
+import 'package:notice_board/screens/tp/upload_notice_screen.dart';
 import 'package:provider/provider.dart';
 
 User? user = FirebaseAuth.instance.currentUser;
@@ -34,9 +34,9 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Notice Board App',
       theme: ThemeData(primarySwatch: Colors.purple),
-      // home: GetTeachers(),
+      home: GetTeachers(),
       // home: StudentProfileSetup(),
-      home: UploadNoticeScreen(),
+      // home: UploadNoticeScreen(),
     );
   }
 }

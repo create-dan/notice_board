@@ -1,19 +1,20 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'dart:io';
-import 'dart:math';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:notice_board/models/notice_model.dart';
+import 'package:notice_board/services/notice_upload.dart';
+import 'package:notice_board/widgets/auth_button.dart';
 import 'package:path/path.dart' as path;
-import '../helpers/constants.dart';
-import '../services/firebase_upload.dart';
+import '../../helpers/constants.dart';
+import '../../services/firebase_upload.dart';
 
 class UploadNoticeImageScreen extends StatefulWidget {
   const UploadNoticeImageScreen({Key? key}) : super(key: key);
@@ -37,6 +38,41 @@ class _UploadNoticeImageScreenState extends State<UploadNoticeImageScreen> {
 
   String urlDownload2 = "";
 
+  bool showSpinner = false;
+
+  void publishNotice() async {
+    setState(() {
+      showSpinner = true;
+    });
+    await uploadImage();
+    await uploadPdf();
+
+    setState(() {
+      NoticeModel.imageUrl = urlDownload;
+      NoticeModel.pdfUrl = urlDownload2;
+    });
+
+    await NoticeUpload().uploadNotice(
+      title: NoticeModel.title.toString(),
+      description: NoticeModel.description.toString(),
+      subject: NoticeModel.subject.toString(),
+      noticeType: NoticeModel.noticeType.toString(),
+      imageUrl: NoticeModel.imageUrl.toString(),
+      pdfUrl: NoticeModel.pdfUrl.toString(),
+    );
+
+    // Navigator.pushReplacement(
+    //   context,
+    //   MaterialPageRoute(
+    //     builder: (context) => GetStudentData(),
+    //   ),
+    // );
+    setState(() {
+      showSpinner = false;
+    });
+    print("OK");
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -46,86 +82,100 @@ class _UploadNoticeImageScreenState extends State<UploadNoticeImageScreen> {
     print(NoticeModel.noticeType);
 
     return Scaffold(
-      body: SafeArea(
-        child: SizedBox(
-          height: size.height,
-          width: size.width,
-          child: Column(
-            // mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(height: 30),
-              Text(
-                "Upload Notice Image",
-                style: TextStyle(
-                  fontSize: 26,
-                  fontWeight: FontWeight.bold,
-                  // color: kOrangeShade,
+      body: ModalProgressHUD(
+        inAsyncCall: showSpinner,
+        progressIndicator: CircularProgressIndicator(color: kOrangeShade),
+        child: SafeArea(
+          child: SizedBox(
+            // height: size.height,
+            // width: size.width,
+            child: Column(
+              // mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(height: 30),
+                Text(
+                  "Upload Notice Image",
+                  style: TextStyle(
+                    fontSize: 26,
+                    fontWeight: FontWeight.bold,
+                    // color: kOrangeShade,
+                  ),
                 ),
-              ),
-              SizedBox(height: 30),
-              _image == null
-                  ? Container(
-                      width: size.width * 0.5,
-                      height: size.width * 0.7,
-                      decoration: BoxDecoration(
-                        border: Border.all(color: kOrangeShade, width: 10),
-                        image: DecorationImage(
-                          image: AssetImage("assets/images/strange.jpg"),
+                SizedBox(height: 30),
+                _image == null
+                    ? Container(
+                        width: size.width * 0.5,
+                        height: size.width * 0.7,
+                        decoration: BoxDecoration(
+                          border: Border.all(color: kOrangeShade, width: 10),
+                          image: DecorationImage(
+                            image: AssetImage("assets/images/strange.jpg"),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      )
+                    : Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(color: kOrangeShade, width: 10),
+                        ),
+                        child: Image.file(
+                          _image!,
+                          alignment: Alignment.center,
+                          width: size.width * 0.5,
+                          height: size.width * 0.7,
                           fit: BoxFit.cover,
                         ),
                       ),
-                    )
-                  : Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(color: kOrangeShade, width: 10),
-                      ),
-                      child: Image.file(
-                        _image!,
-                        alignment: Alignment.center,
-                        width: size.width * 0.5,
-                        height: size.width * 0.7,
-                        fit: BoxFit.cover,
-                      ),
+                SizedBox(height: 30),
+                InkWell(
+                  onTap: () {
+                    buildShowModalBottomSheet(context);
+                  },
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: kOrangeShade, width: 2),
+                      borderRadius: BorderRadius.circular(15),
                     ),
-              SizedBox(height: 30),
-              InkWell(
-                onTap: () {
-                  buildShowModalBottomSheet(context);
-                },
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: kOrangeShade, width: 2),
-                    borderRadius: BorderRadius.circular(15),
+                    child: Text(
+                      "Choose Image",
+                      style:
+                          TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                    ),
                   ),
+                ),
+                SizedBox(height: 30),
+                Center(child: Text("OR")),
+                SizedBox(height: 30),
+                InkWell(
+                  onTap: selectPdf,
                   child: Text(
-                    "Choose Image",
+                    "Choose Pdf",
                     style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                   ),
                 ),
-              ),
-              SizedBox(height: 30),
-              Center(child: Text("OR")),
-              SizedBox(height: 30),
-              InkWell(
-                onTap: selectPdf,
-                child: Text(
-                  "Choose Pdf",
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                ),
-              ),
-              SizedBox(height: 15),
-              if (pickedFile != null)
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  decoration: BoxDecoration(
-                      border: Border.all(color: Colors.black, width: 1)),
-                  child: Text(
-                    pickedFile!.name,
-                    style: TextStyle(color: Colors.grey),
+                SizedBox(height: 15),
+                if (pickedFile != null)
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    decoration: BoxDecoration(
+                        border: Border.all(color: Colors.black, width: 1)),
+                    child: Text(
+                      pickedFile!.name,
+                      style: TextStyle(color: Colors.grey),
+                    ),
                   ),
+                SizedBox(height: 30),
+                AuthButton(
+                  size: size,
+                  name: "Publish",
+                  onTap: () async {
+                    publishNotice();
+                  },
+                  isAdmin: true,
                 ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -259,7 +309,7 @@ class _UploadNoticeImageScreenState extends State<UploadNoticeImageScreen> {
       pickedFile = result.files.first;
     });
 
-    await uploadPdf();
+    // await uploadPdf();
   }
 
   Future uploadPdf() async {
@@ -274,5 +324,7 @@ class _UploadNoticeImageScreenState extends State<UploadNoticeImageScreen> {
 
     final snapshot = await task2!.whenComplete(() {});
     urlDownload2 = await snapshot.ref.getDownloadURL();
+
+    print("urlDownload2 $urlDownload2");
   }
 }

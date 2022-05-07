@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:notice_board/helpers/constants.dart';
 import 'package:notice_board/screens/profile_setup/student_profile_setup.dart';
 import 'package:notice_board/screens/profile_setup/admin_profile_setup.dart';
-import 'package:notice_board/screens/user_profile.dart';
+import 'package:notice_board/screens/tp/user_profile.dart';
 import 'package:notice_board/services/get_admin_data.dart';
 import '../models/user_model.dart';
 import '../screens/auth_screens/verify_user_screen.dart';

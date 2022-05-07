@@ -12,7 +12,8 @@ import 'package:notice_board/helpers/constants.dart';
 import 'package:notice_board/main.dart';
 import 'package:notice_board/models/user_model.dart';
 import 'package:notice_board/providers/user_model_provider.dart';
-import 'package:notice_board/screens/image_viewer.dart';
+import 'package:notice_board/widgets/image_viewer.dart';
+import 'package:notice_board/screens/tp/upload_notice_screen.dart';
 import 'package:notice_board/services/auth_helper.dart';
 import 'package:notice_board/services/firebase_upload.dart';
 import 'package:notice_board/widgets/auth_button.dart';
@@ -21,7 +22,7 @@ import 'package:notice_board/widgets/update_info_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 import 'package:path/path.dart' as path;
 
-import '../services/my_user_info.dart';
+import '../../services/my_user_info.dart';
 
 class UserProfileScreen extends StatefulWidget {
   const UserProfileScreen({Key? key}) : super(key: key);

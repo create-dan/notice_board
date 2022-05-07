@@ -13,15 +13,57 @@ class NoticeUpload {
     required String pdfUrl,
     bool isAdmin = true,
   }) async {
-    String collectionName = "notice";
+    String collectionName1 = "notice";
+    String collectionName2 = "categories";
 
     final CollectionReference noticeCollection =
-        FirebaseFirestore.instance.collection(collectionName);
+        FirebaseFirestore.instance.collection(collectionName1);
+
+    final CollectionReference categoryCollection =
+        FirebaseFirestore.instance.collection(collectionName2);
 
     FirebaseAuth auth = FirebaseAuth.instance;
     String uid = auth.currentUser!.uid.toString();
 
-    noticeCollection.doc(uid).set({
+    var timestamp = DateTime.now().toUtc().millisecondsSinceEpoch;
+    String subjectCollectionName = subject;
+
+    await categoryCollection
+        .doc("subject")
+        .collection(subjectCollectionName)
+        .doc()
+        .set({
+      "title": title,
+      "description": description,
+      "uid": uid,
+      "isAdmin": isAdmin,
+      "subject": subject,
+      "noticeType": noticeType,
+      "imageUrl": imageUrl,
+      "pdfUrl": pdfUrl,
+      "timeStamp": DateTime.now().toUtc().millisecondsSinceEpoch,
+      "createdAt": Timestamp.now(),
+    }, SetOptions(merge: true));
+
+    String noticeTypeCollectionName = noticeType;
+    await categoryCollection
+        .doc("noticeType")
+        .collection(noticeTypeCollectionName)
+        .doc()
+        .set({
+      "title": title,
+      "description": description,
+      "uid": uid,
+      "isAdmin": isAdmin,
+      "subject": subject,
+      "noticeType": noticeType,
+      "imageUrl": imageUrl,
+      "pdfUrl": pdfUrl,
+      "timeStamp": DateTime.now().toUtc().millisecondsSinceEpoch,
+      "createdAt": Timestamp.now(),
+    }, SetOptions(merge: true));
+
+    await noticeCollection.doc(uid).collection('notices').doc().set({
       "title": title,
       "description": description,
       "uid": uid,
@@ -38,27 +80,14 @@ class NoticeUpload {
     }).catchError((error) {
       print("Failed to add user: $error");
     });
+
+    await noticeCollection.doc(uid).set(
+      {
+        "lastNoticeTime": timestamp,
+      },
+      SetOptions(merge: true),
+    );
     return;
-  }
-
-  // Store number of users
-  Future<void> storeNoticeNumbers() async {
-    final CollectionReference appTotalUsersCollection =
-        FirebaseFirestore.instance.collection('totalNotices');
-
-    FirebaseAuth auth = FirebaseAuth.instance;
-    String uid = auth.currentUser!.uid.toString();
-
-    appTotalUsersCollection
-        .doc('countNotices')
-        .set({
-          "noticeTrack": {
-            "count": FieldValue.increment(1),
-            "emails": {uid: auth.currentUser!.email}
-          }
-        }, SetOptions(merge: true))
-        .then((value) => print("Total Notice updated"))
-        .catchError((error) => print("Failed to update Total Notice $error"));
   }
 
   // Update UserDetails

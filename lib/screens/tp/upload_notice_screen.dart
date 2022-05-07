@@ -3,9 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:notice_board/helpers/constants.dart';
 import 'package:notice_board/models/notice_model.dart';
-import 'package:notice_board/screens/upload_notice_image_screen.dart';
+import 'package:notice_board/screens/tp/upload_notice_image_screen.dart';
 import 'package:notice_board/widgets/auth_button.dart';
-import 'package:notice_board/widgets/auth_text_field.dart';
 
 class UploadNoticeScreen extends StatefulWidget {
   const UploadNoticeScreen({Key? key}) : super(key: key);
@@ -16,6 +15,7 @@ class UploadNoticeScreen extends StatefulWidget {
 
 class _UploadNoticeScreenState extends State<UploadNoticeScreen> {
   String? selectedNoticeType;
+  String? selectedSubject;
 
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
@@ -25,12 +25,21 @@ class _UploadNoticeScreenState extends State<UploadNoticeScreen> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    DropdownMenuItem<String> buildMenuCategory(String category) =>
+    DropdownMenuItem<String> buildNoticeTypeCategory(String category) =>
         DropdownMenuItem(
           value: category,
           child: Padding(
             padding: const EdgeInsets.only(left: 8.0),
             child: Text(category),
+          ),
+        );
+
+    DropdownMenuItem<String> buildSubjectCategory(String subject) =>
+        DropdownMenuItem(
+          value: subject,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 8.0),
+            child: Text(subject),
           ),
         );
 
@@ -74,10 +83,39 @@ class _UploadNoticeScreenState extends State<UploadNoticeScreen> {
                           controller: _descriptionController,
                         ),
                         SizedBox(height: 15),
-                        UploadTextField(
-                          lines: 1,
-                          hint: 'Subject',
-                          controller: _subjectController,
+                        // UploadTextField(
+                        //   lines: 1,
+                        //   hint: 'Subject',
+                        //   controller: _subjectController,
+                        // ),
+                        Text(
+                          "Notice Type",
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.w600),
+                        ),
+                        SizedBox(height: 5),
+                        Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(color: kOrangeShade, width: 2),
+                            borderRadius: BorderRadius.circular(7),
+                          ),
+                          child: DropdownButtonHideUnderline(
+                            child: DropdownButton<String>(
+                              hint: Padding(
+                                padding: const EdgeInsets.only(left: 8.0),
+                                child: Text("Choose Subject"),
+                              ),
+                              isExpanded: true,
+                              items:
+                                  subjects.map(buildSubjectCategory).toList(),
+                              onChanged: (value) {
+                                setState(() {
+                                  selectedSubject = value;
+                                });
+                              },
+                              value: selectedSubject,
+                            ),
+                          ),
                         ),
                         SizedBox(height: 15),
                         Text(
@@ -98,7 +136,9 @@ class _UploadNoticeScreenState extends State<UploadNoticeScreen> {
                                 child: Text("Choose Category"),
                               ),
                               isExpanded: true,
-                              items: noticeType.map(buildMenuCategory).toList(),
+                              items: noticeType
+                                  .map(buildNoticeTypeCategory)
+                                  .toList(),
                               onChanged: (value) {
                                 setState(() {
                                   selectedNoticeType = value;
@@ -115,13 +155,15 @@ class _UploadNoticeScreenState extends State<UploadNoticeScreen> {
                             name: "Next",
                             onTap: () {
                               setState(() {
-                                NoticeModel.title = _titleController.text;
+                                _descriptionController.notifyListeners();
+
+                                NoticeModel.title = _titleController.value.text;
                                 NoticeModel.description =
-                                    _descriptionController.text;
-                                NoticeModel.subject = _subjectController.text;
+                                    _descriptionController.value.text;
+                                NoticeModel.subject = selectedSubject;
                                 NoticeModel.noticeType = selectedNoticeType;
                               });
-                              Navigator.pushReplacement(
+                              Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) =>

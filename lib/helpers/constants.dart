@@ -56,3 +56,5 @@ final category = [
 ];
 
 final noticeType = ["General", "Exam", "Lecture", "Assignment"];
+
+final subjects = ["CA", "CN", "TOC", "SE", "JAVA", "ANDROID"];
