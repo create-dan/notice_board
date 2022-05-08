@@ -52,7 +52,8 @@ final category = [
   "Principal",
   "H.O.D.",
   "Class Teacher",
-  "Class Representative"
+  "Class Representative",
+  "something"
 ];
 
 final noticeType = ["General", "Holiday", "Exam", "Lecture", "Assignment"];
