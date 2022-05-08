@@ -46,7 +46,7 @@ final branches = [
   "Civil"
 ];
 
-final clubs = ["ACSES", "SAIT", "ELESA", "EESA", "MESA", "CESA"];
+final clubs = ["ACSES", "SAIT", "ELESA", "EESA", "MESA", "CESA", "WLUG"];
 final category = [
   "Dean",
   "Principal",
