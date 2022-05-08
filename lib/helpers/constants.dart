@@ -55,6 +55,7 @@ final category = [
   "Class Representative"
 ];
 
-final noticeType = ["General", "Exam", "Lecture", "Assignment"];
-
+final noticeType = ["General", "Holiday", "Exam", "Lecture", "Assignment"];
 final subjects = ["CA", "CN", "TOC", "SE", "JAVA", "ANDROID"];
+final branch = ["CSE", "IT", "ENTC", "ELE", "MECH", "CIVIL"];
+final year = ["First Year", "Second Year", "Third Year", "Final Year"];

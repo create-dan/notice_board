@@ -10,6 +10,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:notice_board/models/notice_model.dart';
+import 'package:notice_board/screens/tp/tp_screen.dart';
 import 'package:notice_board/services/notice_upload.dart';
 import 'package:notice_board/widgets/auth_button.dart';
 import 'package:path/path.dart' as path;
@@ -33,8 +34,7 @@ class _UploadNoticeImageScreenState extends State<UploadNoticeImageScreen> {
 
   PlatformFile? pickedFile;
 
-  String urlDownload =
-      'https://thumbs.dreamstime.com/b/solid-purple-gradient-user-icon-web-mobile-design-interface-ui-ux-developer-app-137467998.jpg';
+  String urlDownload = "";
 
   String urlDownload2 = "";
 
@@ -48,25 +48,25 @@ class _UploadNoticeImageScreenState extends State<UploadNoticeImageScreen> {
     await uploadPdf();
 
     setState(() {
-      NoticeModel.imageUrl = urlDownload;
-      NoticeModel.pdfUrl = urlDownload2;
+      NoticeModel1.imageUrl = urlDownload;
+      NoticeModel1.pdfUrl = urlDownload2;
     });
 
     await NoticeUpload().uploadNotice(
-      title: NoticeModel.title.toString(),
-      description: NoticeModel.description.toString(),
-      subject: NoticeModel.subject.toString(),
-      noticeType: NoticeModel.noticeType.toString(),
-      imageUrl: NoticeModel.imageUrl.toString(),
-      pdfUrl: NoticeModel.pdfUrl.toString(),
+      title: NoticeModel1.title.toString(),
+      description: NoticeModel1.description.toString(),
+      subject: NoticeModel1.subject.toString(),
+      noticeType: NoticeModel1.noticeType.toString(),
+      imageUrl: NoticeModel1.imageUrl.toString(),
+      pdfUrl: NoticeModel1.pdfUrl.toString(),
     );
 
-    // Navigator.pushReplacement(
-    //   context,
-    //   MaterialPageRoute(
-    //     builder: (context) => GetStudentData(),
-    //   ),
-    // );
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => TpScreen(),
+      ),
+    );
     setState(() {
       showSpinner = false;
     });
@@ -76,10 +76,10 @@ class _UploadNoticeImageScreenState extends State<UploadNoticeImageScreen> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    print(NoticeModel.title);
-    print(NoticeModel.description);
-    print(NoticeModel.subject);
-    print(NoticeModel.noticeType);
+    print(NoticeModel1.title);
+    print(NoticeModel1.description);
+    print(NoticeModel1.subject);
+    print(NoticeModel1.noticeType);
 
     return Scaffold(
       body: ModalProgressHUD(
@@ -308,11 +308,10 @@ class _UploadNoticeImageScreenState extends State<UploadNoticeImageScreen> {
     setState(() {
       pickedFile = result.files.first;
     });
-
-    // await uploadPdf();
   }
 
   Future uploadPdf() async {
+    if (pickedFile == null) return;
     final path = "files/noticesPdf/${pickedFile!.name}";
     final file = File(pickedFile!.path!);
 

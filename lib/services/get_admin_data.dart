@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:notice_board/helpers/constants.dart';
 import 'package:notice_board/screens/profile_setup/student_profile_setup.dart';
 import 'package:notice_board/screens/profile_setup/admin_profile_setup.dart';
+import 'package:notice_board/screens/tp/all_notices.dart';
 import 'package:notice_board/screens/tp/upload_notice_screen.dart';
 import 'package:notice_board/screens/tp/user_profile.dart';
 import 'package:notice_board/screens/tp/tp_screen.dart';
@@ -73,6 +74,7 @@ class GetAdminData extends StatelessWidget {
               return VerifyUserScreen();
             }
             // return HomePage();
+            // return AllNotices();
             return TpScreen();
           }
           return Center(
