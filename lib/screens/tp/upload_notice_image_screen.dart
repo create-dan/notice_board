@@ -10,6 +10,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:notice_board/models/notice_model.dart';
+import 'package:notice_board/models/user_model.dart';
 import 'package:notice_board/screens/tp/tp_screen.dart';
 import 'package:notice_board/services/notice_upload.dart';
 import 'package:notice_board/widgets/auth_button.dart';
@@ -59,6 +60,9 @@ class _UploadNoticeImageScreenState extends State<UploadNoticeImageScreen> {
       noticeType: NoticeModel1.noticeType.toString(),
       imageUrl: NoticeModel1.imageUrl.toString(),
       pdfUrl: NoticeModel1.pdfUrl.toString(),
+      year: NoticeModel1.year.toString(),
+      branch: NoticeModel1.branch.toString(),
+      owner: NoticeModel1.owner.toString(),
     );
 
     Navigator.pushReplacement(
@@ -76,10 +80,6 @@ class _UploadNoticeImageScreenState extends State<UploadNoticeImageScreen> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    print(NoticeModel1.title);
-    print(NoticeModel1.description);
-    print(NoticeModel1.subject);
-    print(NoticeModel1.noticeType);
 
     return Scaffold(
       body: ModalProgressHUD(

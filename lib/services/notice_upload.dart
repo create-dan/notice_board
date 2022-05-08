@@ -7,10 +7,13 @@ class NoticeUpload {
   Future<void> uploadNotice({
     required String title,
     String? description,
+    required String year,
+    required String branch,
     required String subject,
     required String noticeType,
     required String imageUrl,
     required String pdfUrl,
+    required String owner,
     bool isAdmin = true,
   }) async {
     String collectionName1 = "notice";
@@ -26,8 +29,11 @@ class NoticeUpload {
     String uid = auth.currentUser!.uid.toString();
 
     var timestamp = DateTime.now().toUtc().millisecondsSinceEpoch;
-    String subjectCollectionName = subject;
 
+    // --------------------- Categories -------------------------- //
+
+    // Subject
+    String subjectCollectionName = subject;
     await categoryCollection
         .doc("subject")
         .collection(subjectCollectionName)
@@ -41,10 +47,14 @@ class NoticeUpload {
       "noticeType": noticeType,
       "imageUrl": imageUrl,
       "pdfUrl": pdfUrl,
+      "owner": owner,
+      "branch": branch,
+      "year": year,
       "timeStamp": DateTime.now().toUtc().millisecondsSinceEpoch,
       "createdAt": Timestamp.now(),
-    }, SetOptions(merge: true));
+    }, SetOptions(merge: true)).then((value) {});
 
+    // NoticeType
     String noticeTypeCollectionName = noticeType;
     await categoryCollection
         .doc("noticeType")
@@ -59,9 +69,59 @@ class NoticeUpload {
       "noticeType": noticeType,
       "imageUrl": imageUrl,
       "pdfUrl": pdfUrl,
+      "owner": owner,
+      "branch": branch,
+      "year": year,
       "timeStamp": DateTime.now().toUtc().millisecondsSinceEpoch,
       "createdAt": Timestamp.now(),
     }, SetOptions(merge: true));
+
+    // Year
+    String yearCollectionName = year;
+    await categoryCollection
+        .doc("year")
+        .collection(yearCollectionName)
+        .doc()
+        .set({
+      "title": title,
+      "description": description,
+      "uid": uid,
+      "isAdmin": isAdmin,
+      "subject": subject,
+      "noticeType": noticeType,
+      "imageUrl": imageUrl,
+      "pdfUrl": pdfUrl,
+      "owner": owner,
+      "branch": branch,
+      "year": year,
+      "timeStamp": DateTime.now().toUtc().millisecondsSinceEpoch,
+      "createdAt": Timestamp.now(),
+    }, SetOptions(merge: true));
+
+    // Branch
+    String branchCollectionName = branch;
+    await categoryCollection
+        .doc("branch")
+        .collection(branchCollectionName)
+        .doc()
+        .set({
+      "title": title,
+      "description": description,
+      "uid": uid,
+      "isAdmin": isAdmin,
+      "subject": subject,
+      "noticeType": noticeType,
+      "imageUrl": imageUrl,
+      "pdfUrl": pdfUrl,
+      "owner": owner,
+      "branch": branch,
+      "year": year,
+      "timeStamp": DateTime.now().toUtc().millisecondsSinceEpoch,
+      "createdAt": Timestamp.now(),
+    }, SetOptions(merge: true));
+    // --------------------- Categories -------------------------- //
+
+    // All notices
 
     await noticeCollection.doc(uid).collection('notices').doc().set({
       "title": title,
@@ -72,10 +132,13 @@ class NoticeUpload {
       "noticeType": noticeType,
       "imageUrl": imageUrl,
       "pdfUrl": pdfUrl,
+      "owner": owner,
+      "branch": branch,
+      "year": year,
       "timeStamp": DateTime.now().toUtc().millisecondsSinceEpoch,
       "createdAt": Timestamp.now(),
     }, SetOptions(merge: true)).then((value) async {
-      print("User Details Added");
+      print("Notice Created Successfully");
       // await storeNumberOfUsers();
     }).catchError((error) {
       print("Failed to add user: $error");

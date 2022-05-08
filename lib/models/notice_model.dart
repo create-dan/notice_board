@@ -21,6 +21,9 @@ class NoticeModel2 {
   String? pdfUrl;
   List<String> tags = [];
   String? createdAt;
+  String? year;
+  String? branch;
+  String? owner;
 
   NoticeModel2({
     required this.title,
@@ -31,5 +34,8 @@ class NoticeModel2 {
     required this.pdfUrl,
     required this.createdAt,
     required this.tags,
+    required this.branch,
+    required this.owner,
+    required this.year,
   });
 }

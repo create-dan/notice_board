@@ -257,28 +257,28 @@ class _UploadNoticeScreenState extends State<UploadNoticeScreen> {
                                         selectedNoticeType;
                                     NoticeModel1.owner = UserModel.name;
                                     NoticeModel1.branch = selectedBranch;
-                                    NoticeModel1.branch = selectedYear;
+                                    NoticeModel1.year = selectedYear;
                                   });
-                                  if (condition) {
-                                    return ScaffoldMessenger.of(context)
-                                        .showSnackBar(
-                                      SnackBar(
-                                        backgroundColor: Colors.redAccent,
-                                        content: Text(
-                                          'Please fill all required field',
-                                          style: TextStyle(color: Colors.white),
-                                        ),
-                                      ),
-                                    );
-                                  } else {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            UploadNoticeImageScreen(),
-                                      ),
-                                    );
-                                  }
+                                  // if (!condition) {
+                                  //   return ScaffoldMessenger.of(context)
+                                  //       .showSnackBar(
+                                  //     SnackBar(
+                                  //       backgroundColor: Colors.redAccent,
+                                  //       content: Text(
+                                  //         'Please fill all required field',
+                                  //         style: TextStyle(color: Colors.white),
+                                  //       ),
+                                  //     ),
+                                  //   );
+                                  // } else {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          UploadNoticeImageScreen(),
+                                    ),
+                                  );
+                                  // }
                                 }
                               },
                               isAdmin: true,
